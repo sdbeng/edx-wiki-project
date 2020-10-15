@@ -5,7 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>All Pages</h1>
+    {%if search %}
+        <h3>I am searching for: {{querySearch}}</h3>
+    {% else %}
+        <h1>All Pages</h1>
+    {% endif %}
 
     <ul>
         {% for entry in entries %}
