@@ -1,12 +1,13 @@
 {% extends "encyclopedia/layout.html" %}
 
-{% block title %}
+{% comment %} {% block title %}
     {{title}}
-{% endblock %}
+{% endblock %} {% endcomment %}
 
 {% block body %}
+    
     <h1>{{title}}</h1>
-
+    
     <div>{{title_content | safe}}</div>
 
 {% endblock %}
