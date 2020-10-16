@@ -5,9 +5,20 @@
 {% endblock %} 
 
 {% block body %}
-    
+
+    <form action={% url 'edit' %} method="POST">
+    {% csrf_token %}
+
+    {% with title_name=title %}
+
+    <button type="submit" name="edit" value="{{title_name}}" id="edit">
+        edit
+    </button>
+    {% endwith %}
     <h1>{{title}}</h1>
     
-    <div>{{title_content | safe}}</div>
+    </form>
+    
+    <div>{{title_content| safe}}</div>
 
 {% endblock %}

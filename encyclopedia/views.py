@@ -4,10 +4,16 @@ from django.http import Http404, HttpResponse, HttpResponseNotFound, HttpRespons
 import markdown2
 from markdown2 import Markdown
 from django.urls import reverse
+from random import choice
 
 from . import util
 # ot use forms create class
 class NewTitleForm(forms.Form):
+    title=forms.CharField(label="New Title")
+    content=forms.CharField(widget=forms.Textarea(attrs={
+        'cols':20, 'rows':5},))
+
+class EditTitleForm(forms.Form):
     title=forms.CharField(label="New Title")
     content=forms.CharField(widget=forms.Textarea(attrs={
         'cols':20, 'rows':5},))
@@ -80,3 +86,25 @@ def add(request):
     return render(request, 'encyclopedia/add.html', {
         "form": NewTitleForm()
     })
+
+def edit(request):
+    form = NewTitleForm(request.POST)
+    title_name = request.POST.get('edit')
+    content_body = util.get_entry(title_name) 
+    edit_form = EditTitleForm(initial={'title_name': title_name, 'body': content_body})
+    if edit_form.is_valid():
+        return render(request, "encyclopedia/edit.html", {
+            "title": title_name,
+            "edit_form": edit_form,
+            "form": form
+            # 'title_content': content_body
+        })
+    else:
+        return render(request, "encyclopedia/edit.html", {
+        'title': title_name,
+        "edit_form": edit_form,
+        
+        })
+
+def random(request):
+    return wiki(request, choice(util.list_entries()))
