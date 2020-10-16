@@ -9,7 +9,7 @@ from . import util
 # ot use forms create class
 class NewTitleForm(forms.Form):
     title=forms.CharField(label="New Title")
-    content=forms.Textarea()
+    content=forms.CharField(widget=forms.Textarea)
 
 def index(request):
     # print(util.list_entries())
@@ -56,14 +56,16 @@ def add(request):
         # save new data entry in the form var
         form = NewTitleForm(request.POST)
         # then do server-side validation
-        if form.is_valid:
+        if form.is_valid():
             # if title is valid, save it
             # Note1: ["title"] is the class title field prop
             # Note2: ["content"] is the class content field prop
             title = form.cleaned_data["title"]
             content = form.cleaned_data["content"]
             # then add the title and content to the list
-            # todo: save_entry(title, content)
+            # todo: check if title already exists, show message, otherwise save it w/ save_entry(title, content)
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse('index'))
         else:
             # if data is not clean, pass form back out
             return render(request, "encyclopedia/add.html", {
