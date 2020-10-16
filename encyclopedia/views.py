@@ -9,10 +9,11 @@ from . import util
 # ot use forms create class
 class NewTitleForm(forms.Form):
     title=forms.CharField(label="New Title")
-    content=forms.CharField(widget=forms.Textarea)
+    content=forms.CharField(widget=forms.Textarea(attrs={
+        'cols':20, 'rows':5},))
 
 def index(request):
-    # print(util.list_entries())
+    print(util.list_entries())
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
@@ -64,6 +65,10 @@ def add(request):
             content = form.cleaned_data["content"]
             # then add the title and content to the list
             # todo: check if title already exists, show message, otherwise save it w/ save_entry(title, content)
+            all_titles = util.list_entries()
+            for filename in all_titles:
+                if title.lower() == filename.lower():
+                    return HttpResponse('This title already exists.')
             util.save_entry(title, content)
             return HttpResponseRedirect(reverse('index'))
         else:
