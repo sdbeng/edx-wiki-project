@@ -19,7 +19,7 @@ class EditTitleForm(forms.Form):
         'cols':20, 'rows':5},))
 
 def index(request):
-    print(util.list_entries())
+    print(f" util.list_entries(): {util.list_entries()}")
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
     })
@@ -39,14 +39,25 @@ def wiki(request, title):
         })
 
 def search(request):
-    querySearch = request.GET.get('q', '') # q is the str name in the url and in the input tag
-    print(f"query: {querySearch}")
-    entries_list = util.list_entries()
-    print(f"entries_list {entries_list}")
-    new_list = []
-    if querySearch is not None:
-        return HttpResponseRedirect("/")
-        # return HttpResponseRedirect(reverse("wiki"), kwargs={'title': querySearch})
+    if request.method == "GET":
+        mk = Markdown()
+        querySearch = request.GET.get('q', '') # q is the str name in the url and in the input tag
+        print(f"query: {querySearch}")
+        entries_list = util.list_entries()
+    
+        new_list = []
+        if querySearch is not None and querySearch.lower() in util.get_entry(querySearch):
+            print(f"query matches, not None: {querySearch}")
+            
+            return render(request, "encyclopedia/title.html", {
+                'title': querySearch,
+                "title_content": mk.convert(util.get_entry(querySearch))
+            })
+            
+        else:
+            return render(request, "encyclopedia/search.html", {
+                "title_search": querySearch
+            })
     else:
         for entry in entries_list:
             if querySearch in entry:

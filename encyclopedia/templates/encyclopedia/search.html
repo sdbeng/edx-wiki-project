@@ -1,13 +1,15 @@
 {% extends "encyclopedia/layout.html"%}
 
 {% block title %}
+    Search results
 {% endblock %}
 
 {% block body %}
 <h1>Search Results</h1>
-  {% for item in new_list %}
+    You searched for: {{title_search}}
+  {% comment %} {% for item in new_list %}
   <a href="{{ item }}">
     <h5>{{item}}</h5>
   </a>
-  {% endfor %}
+  {% endfor %} {% endcomment %}
 {% endblock %}
